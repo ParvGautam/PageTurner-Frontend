@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base URL and credentials config
 const api = axios.create({
-  baseURL: 'http://localhost:7000/api',
+  baseURL: 'https://pageturner-backend-2.onrender.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
