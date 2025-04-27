@@ -1,0 +1,237 @@
+/* Premium UI Styling for Edit Novel */
+.edit-novel-container {
+  background-color: #000;
+  background-image: radial-gradient(circle at 10% 20%, rgba(30, 30, 52, 0.3) 0%, rgba(0, 0, 0, 0.3) 90.1%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.edit-novel-card {
+  background-color: rgba(20, 20, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(81, 153, 252, 0.1);
+  overflow: hidden;
+}
+
+.edit-novel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(81, 153, 252, 0.2);
+}
+
+.edit-novel-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.edit-novel-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 1.5rem;
+  background-color: #5199fc;
+  border-radius: 2px;
+}
+
+.edit-novel-subtitle {
+  color: #a0aec0;
+  margin-top: 0.5rem;
+}
+
+.edit-novel-form {
+  padding: 2rem;
+}
+
+.edit-novel-thumbnail {
+  position: relative;
+  perspective: 1000px;
+  transition: all 0.3s ease;
+}
+
+.edit-novel-label {
+  display: block;
+  color: #e2e8f0;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.edit-novel-input,
+.edit-novel-textarea,
+.edit-novel-select {
+  width: 100%;
+  background-color: rgba(30, 30, 50, 0.6);
+  border: 1px solid rgba(81, 153, 252, 0.2);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.edit-novel-input:focus,
+.edit-novel-textarea:focus,
+.edit-novel-select:focus {
+  border-color: #5199fc;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(81, 153, 252, 0.2);
+}
+
+.edit-novel-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.edit-novel-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%235199fc'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+.edit-novel-error {
+  color: #fc5151;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+.edit-novel-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(81, 153, 252, 0.1);
+  margin-top: 2rem;
+}
+
+.edit-novel-btn-cancel {
+  background-color: transparent;
+  color: #e2e8f0;
+  border: 1px solid rgba(81, 153, 252, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-novel-btn-cancel:hover {
+  background-color: rgba(81, 153, 252, 0.05);
+  border-color: rgba(81, 153, 252, 0.5);
+}
+
+.edit-novel-btn-submit {
+  background: linear-gradient(135deg, #5199fc, #3f7ac8);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(81, 153, 252, 0.3);
+}
+
+.edit-novel-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(81, 153, 252, 0.4);
+}
+
+.edit-novel-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.edit-novel-file-input-container {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.edit-novel-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.edit-novel-file-input-btn {
+  width: 100%;
+  background: rgba(81, 153, 252, 0.1);
+  border: 1px dashed rgba(81, 153, 252, 0.4);
+  color: #5199fc;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-novel-file-input-btn:hover {
+  background: rgba(81, 153, 252, 0.15);
+}
+
+.edit-novel-back-btn {
+  display: flex;
+  align-items: center;
+  color: #a0aec0;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.edit-novel-back-btn:hover {
+  color: #5199fc;
+  transform: translateX(-3px);
+}
+
+.edit-novel-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .edit-novel-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .edit-novel-header {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .edit-novel-form {
+    padding: 1rem;
+  }
+  
+  .edit-novel-btn-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .edit-novel-btn-cancel,
+  .edit-novel-btn-submit {
+    width: 100%;
+  }
+} 

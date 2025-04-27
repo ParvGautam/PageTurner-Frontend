@@ -1,0 +1,471 @@
+/* EditChapter.css */
+
+/* General editor styles */
+.md-editor-error {
+  border: 1px solid #ef4444 !important;
+  border-radius: 0.375rem;
+}
+
+/* Make sure the markdown preview renders properly */
+.prose {
+  color: #374151;
+  max-width: none;
+  overflow-y: auto;
+}
+
+.prose h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.prose p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.625;
+}
+
+.prose ul, .prose ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1rem 0;
+  color: #4b5563;
+}
+
+.prose code {
+  font-family: monospace;
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.prose pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.prose a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  text-decoration: none;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.375rem;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+
+.prose table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.prose table td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.prose table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* Custom editor toolbar styling */
+.w-md-editor-toolbar {
+  background-color: #f9fafb !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.w-md-editor-text {
+  font-family: monospace !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Make the editor take full width */
+.w-md-editor {
+  width: 100% !important;
+  box-shadow: none !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.375rem !important;
+}
+
+/* Premium UI Styling for Edit Chapter */
+.edit-chapter-container {
+  background-color: #000;
+  background-image: radial-gradient(circle at 10% 20%, rgba(30, 30, 52, 0.3) 0%, rgba(0, 0, 0, 0.3) 90.1%);
+  min-height: 100vh;
+}
+
+.edit-chapter-card {
+  background-color: rgba(20, 20, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(81, 153, 252, 0.1);
+  overflow: hidden;
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+.edit-chapter-header {
+  background: linear-gradient(135deg, rgba(81, 153, 252, 0.8), rgba(63, 122, 200, 0.8));
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(81, 153, 252, 0.3);
+}
+
+.edit-chapter-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edit-chapter-title-container {
+  color: white;
+}
+
+.edit-chapter-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.edit-chapter-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.edit-chapter-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.edit-chapter-action-btn {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-chapter-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.edit-chapter-form {
+  padding: 2rem;
+}
+
+.edit-chapter-form-section {
+  margin-bottom: 1.5rem;
+}
+
+.edit-chapter-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.edit-chapter-label {
+  display: block;
+  color: #e2e8f0;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.edit-chapter-input,
+.edit-chapter-textarea {
+  width: 100%;
+  background-color: rgba(30, 30, 50, 0.6);
+  border: 1px solid rgba(81, 153, 252, 0.2);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.edit-chapter-input:focus,
+.edit-chapter-textarea:focus {
+  border-color: #5199fc;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(81, 153, 252, 0.2);
+}
+
+.edit-chapter-textarea {
+  min-height: 400px;
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+}
+
+.edit-chapter-error {
+  color: #fc5151;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+.edit-chapter-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background-color: rgba(30, 30, 50, 0.4);
+  border-top: 1px solid rgba(81, 153, 252, 0.1);
+}
+
+.edit-chapter-cancel-btn {
+  background-color: transparent;
+  color: #e2e8f0;
+  border: 1px solid rgba(81, 153, 252, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-chapter-cancel-btn:hover {
+  background-color: rgba(81, 153, 252, 0.05);
+  border-color: rgba(81, 153, 252, 0.5);
+}
+
+.edit-chapter-submit-btn {
+  background: linear-gradient(135deg, #5199fc, #3f7ac8);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(81, 153, 252, 0.3);
+}
+
+.edit-chapter-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(81, 153, 252, 0.4);
+}
+
+.edit-chapter-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.edit-chapter-preview {
+  background-color: rgba(20, 20, 30, 0.6);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  color: #e2e8f0;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+}
+
+.edit-chapter-preview h1 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.edit-chapter-preview h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: white;
+}
+
+.edit-chapter-preview p {
+  margin-bottom: 1rem;
+}
+
+.edit-chapter-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.edit-chapter-spinner {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 4px solid rgba(81, 153, 252, 0.1);
+  border-top-color: #5199fc;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.edit-chapter-autosave {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: rgba(30, 30, 50, 0.8);
+  color: #a0aec0;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(81, 153, 252, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.edit-chapter-autosave-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #a0aec0;
+}
+
+.edit-chapter-autosave-icon.saved {
+  background-color: #10b981;
+}
+
+.edit-chapter-autosave-icon.saving {
+  background-color: #f59e0b;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-chapter-card {
+    margin: 0;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .edit-chapter-header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .edit-chapter-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .edit-chapter-actions {
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .edit-chapter-action-btn {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .edit-chapter-form {
+    padding: 1.5rem;
+  }
+  
+  .edit-chapter-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .edit-chapter-footer {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  
+  .edit-chapter-cancel-btn,
+  .edit-chapter-submit-btn {
+    width: 100%;
+  }
+  
+  .edit-chapter-autosave {
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+  }
+} 

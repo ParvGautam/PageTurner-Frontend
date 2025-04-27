@@ -1,0 +1,104 @@
+/* Smooth Scroll Styles */
+
+/* For touch devices, ensure we use native scrolling */
+@media (pointer: coarse) {
+  html.lenis {
+    height: auto;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.lenis.lenis-smooth {
+  scrollbar-width: none;
+}
+
+.lenis.lenis-smooth::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure elements with sticky positioning work correctly with Lenis */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Custom scrollbar for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 93, 0, 0.5) rgba(0, 0, 0, 0);
+}
+
+/* Custom scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 93, 0, 0.5);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 93, 0, 0.8);
+}
+
+/* For fade-in animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* For scroll animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Parallax effects */
+.parallax {
+  will-change: transform;
+  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1);
+} 

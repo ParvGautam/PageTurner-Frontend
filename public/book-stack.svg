@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <!-- Book 1 (bottom) -->
+  <rect x="30" y="140" width="140" height="20" rx="2" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+  
+  <!-- Book 2 -->
+  <rect x="25" y="120" width="150" height="20" rx="2" fill="#B3E5FC" stroke="#03A9F4" stroke-width="2"/>
+  
+  <!-- Book 3 -->
+  <rect x="35" y="100" width="130" height="20" rx="2" fill="#FFCDD2" stroke="#F44336" stroke-width="2"/>
+  
+  <!-- Book 4 -->
+  <rect x="20" y="80" width="160" height="20" rx="2" fill="#C8E6C9" stroke="#4CAF50" stroke-width="2"/>
+  
+  <!-- Book 5 -->
+  <rect x="40" y="60" width="120" height="20" rx="2" fill="#E1BEE7" stroke="#9C27B0" stroke-width="2"/>
+  
+  <!-- Book 6 (top) -->
+  <rect x="50" y="40" width="100" height="20" rx="2" fill="#FFECB3" stroke="#FFC107" stroke-width="2"/>
+  
+  <!-- Book pages (side view) -->
+  <rect x="30" y="140" width="140" height="3" fill="white" opacity="0.7"/>
+  <rect x="25" y="120" width="150" height="3" fill="white" opacity="0.7"/>
+  <rect x="35" y="100" width="130" height="3" fill="white" opacity="0.7"/>
+  <rect x="20" y="80" width="160" height="3" fill="white" opacity="0.7"/>
+  <rect x="40" y="60" width="120" height="3" fill="white" opacity="0.7"/>
+  <rect x="50" y="40" width="100" height="3" fill="white" opacity="0.7"/>
+  
+  <!-- Open book on top -->
+  <path d="M100,20 L60,35 L60,40 L140,40 L140,35 Z" fill="#FFFFFF" stroke="#666666" stroke-width="1"/>
+  <path d="M100,20 L60,35 L60,40 L100,35 Z" fill="#F5F5F5" stroke="#666666" stroke-width="1"/>
+  <path d="M100,20 L140,35 L140,40 L100,35 Z" fill="#F5F5F5" stroke="#666666" stroke-width="1"/>
+  
+  <!-- Book lines (text representation) -->
+  <line x1="70" y1="30" x2="90" y2="29" stroke="#999999" stroke-width="1"/>
+  <line x1="70" y1="32" x2="85" y2="31" stroke="#999999" stroke-width="1"/>
+  <line x1="70" y1="34" x2="92" y2="33" stroke="#999999" stroke-width="1"/>
+  
+  <line x1="110" y1="30" x2="130" y2="29" stroke="#999999" stroke-width="1"/>
+  <line x1="115" y1="32" x2="135" y2="31" stroke="#999999" stroke-width="1"/>
+  <line x1="110" y1="34" x2="132" y2="33" stroke="#999999" stroke-width="1"/>
+</svg> 

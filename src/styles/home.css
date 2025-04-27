@@ -1,0 +1,162 @@
+/* Custom styles for Home page */
+
+/* Radial gradient background utility */
+.bg-gradient-radial {
+  background-image: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Enhancement for book cards on dark background */
+.book-card-dark {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Home page styles */
+
+/* Book logo header styles */
+.book-logo-header {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.book-letter {
+  font-family: Arial, sans-serif;
+  font-size: 10rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.book-spine {
+  position: absolute;
+  height: 150px;
+  transform: rotate(8deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 0 10px;
+  z-index: 1;
+}
+
+.book-spine-pink {
+  background-color: #ff69b4;
+  transform: rotate(10deg);
+  z-index: 2;
+}
+
+.book-spine-yellow {
+  background-color: #ffd700;
+  transform: rotate(-5deg);
+  z-index: 3;
+}
+
+.book-spine-red {
+  background-color: #ff5068;
+  transform: rotate(8deg);
+  z-index: 4;
+}
+
+.book-spine-blue {
+  background-color: #5199fc;
+  transform: rotate(-8deg);
+  height: 100px;
+  z-index: 5;
+}
+
+.book-spine-purple {
+  background-color: #da70d6;
+  transform: rotate(6deg);
+  z-index: 1;
+}
+
+.book-separator {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  margin: 2rem 0;
+}
+
+.book-dot {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 6;
+}
+
+.book-dot-blue {
+  width: 30px;
+  height: 30px;
+  background-color: #5199fc;
+  left: 24%;
+  top: 45%;
+}
+
+.book-dot-pink {
+  width: 24px;
+  height: 24px;
+  background-color: #ff69b4;
+  left: 28%;
+  top: 40%;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .book-logo-header {
+    height: 180px;
+  }
+  
+  .book-letter {
+    font-size: 6rem;
+  }
+  
+  .book-spine {
+    height: 120px;
+  }
+  
+  .book-spine-blue {
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-logo-header {
+    height: 140px;
+  }
+  
+  .book-letter {
+    font-size: 4rem;
+  }
+  
+  .book-spine {
+    height: 90px;
+    font-size: 10px;
+  }
+  
+  .book-spine-blue {
+    height: 60px;
+  }
+  
+  .book-dot-blue {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .book-dot-pink {
+    width: 16px;
+    height: 16px;
+  }
+} 

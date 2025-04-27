@@ -1,0 +1,224 @@
+/* Novel3DBook.css - Clean 3D book display */
+
+.novel-3d-container {
+  perspective: 3000px;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.novel-3d-book {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 5% auto;
+  border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(45deg, #DAD5DC 0%, #f2ebf4 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 400;
+  color: #2b2b2b;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transition: -webkit-transform .5s;
+  -moz-transition: -moz-transform .5s;
+  transition: transform .5s;
+}
+
+.novel-3d-book:hover {
+  -webkit-transform: rotate3d(0,1,0,35deg);
+  -moz-transform: rotate3d(0,1,0,35deg);
+  transform: rotate3d(0,1,0,35deg);
+  cursor: pointer;
+}
+
+.novel-3d-book > div,
+.novel-3d-front > div {
+  display: block;
+  position: absolute;
+}
+
+.novel-3d-front {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transform-origin: 0% 50%;
+  -moz-transform-origin: 0% 50%;
+  transform-origin: 0% 50%;
+  -webkit-transition: -webkit-transform .5s;
+  -moz-transition: -moz-transform .5s;
+  transition: transform .5s;
+  -webkit-transform: translate3d(0,0,20px);
+  -moz-transform: translate3d(0,0,20px);
+  transform: translate3d(0,0,20px);
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+}
+
+.novel-3d-front > div {
+  width: 100%;
+  height: 100%;
+}
+
+.novel-3d-left-side {
+  width: 40px;
+  left: -20px;
+  height: 100%;
+  background-color: rgba(232,229,234);
+  -webkit-transform: rotate3d(0,1,0,-90deg);
+  -moz-transform: rotate3d(0,1,0,-90deg);
+  transform: rotate3d(0,1,0,-90deg);
+}
+
+.novel-3d-cover {
+  background: linear-gradient(45deg, #DAD5DC 0%, #f2ebf4 100%);
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.novel-3d-cover:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  bottom: 0;
+  width: 3px;
+  background: rgba(0,0,0,0.1);
+  box-shadow: 1px 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.novel-3d-front:after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: -1px;
+  width: 1px;
+}
+
+.novel-3d-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 3px 3px 0;
+  display: block;
+}
+
+.novel-3d-left-side h2 {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  color: #2b2b2b;
+  font-size: 14px;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(90deg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.novel-3d-left-side h2 span {
+  display: block;
+  max-width: 180px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.novel-3d-eye-left,
+.novel-3d-eye-right {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  margin-top: -100px;
+  margin-left: -110px;
+  width: 300px;
+  z-index: 10;
+  opacity: 0.7;
+}
+
+.novel-3d-eye-right {
+  padding-left: 185px;
+}
+
+.novel-3d-num-up {
+  position: absolute;
+  top: 64px;
+  left: 47px;
+  letter-spacing: 50px;
+  transform: rotate(-90deg);
+  z-index: 15;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.novel-3d-num-down {
+  position: absolute;
+  bottom: 65px;
+  left: 47px;
+  transform: rotate(-90deg);
+  z-index: 15;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.novel-3d-author {
+  position: absolute;
+  bottom: 25px;
+  left: 50px;
+  opacity: 0.8;
+  z-index: 15;
+  font-size: 16px;
+}
+
+.novel-3d-cover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 5;
+  border-radius: 0 3px 3px 0;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .novel-3d-book {
+    margin: 10% auto;
+  }
+  
+  .novel-3d-eye-left,
+  .novel-3d-eye-right {
+    transform: scale(0.8);
+  }
+  
+  .novel-3d-num-up,
+  .novel-3d-num-down,
+  .novel-3d-author {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .novel-3d-eye-left,
+  .novel-3d-eye-right {
+    transform: scale(0.6);
+  }
+  
+  .novel-3d-left-side {
+    width: 30px;
+    left: -15px;
+  }
+  
+  .novel-3d-left-side h2 {
+    font-size: 12px;
+  }
+} 

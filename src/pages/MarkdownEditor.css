@@ -1,0 +1,90 @@
+/* Custom styles for markdown editor */
+
+/* Reset some default styles from the editor */
+.w-md-editor {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Fix editor height and scrolling */
+.w-md-editor-content {
+  height: 100% !important;
+}
+
+/* Make the editor and preview areas more readable */
+.w-md-editor-text {
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  padding: 12px !important;
+}
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace !important;
+}
+
+/* Improve the preview area */
+.w-md-editor-preview {
+  padding: 16px !important;
+  background-color: rgba(24, 24, 27, 0.7) !important;
+  border-left: 1px solid rgba(75, 85, 99, 0.3) !important;
+}
+
+/* Better scrollbar styling */
+.w-md-editor-text-pre::-webkit-scrollbar,
+.w-md-editor-preview::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.w-md-editor-text-pre::-webkit-scrollbar-thumb,
+.w-md-editor-preview::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+  border-radius: 4px;
+}
+
+.w-md-editor-text-pre::-webkit-scrollbar-thumb:hover,
+.w-md-editor-preview::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
+
+/* Make placeholder text more visible */
+.w-md-editor-text-input::placeholder {
+  color: rgba(156, 163, 175, 0.7) !important;
+}
+
+/* Better styling for code blocks in preview */
+.w-md-editor-preview code {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.w-md-editor-preview pre {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+  border-radius: 6px;
+  border: 1px solid rgba(75, 85, 99, 0.3) !important;
+}
+
+/* Fix the toolbar appearance */
+.w-md-editor-toolbar {
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3) !important;
+  background-color: rgba(31, 41, 55, 0.7) !important;
+  padding: 8px !important;
+}
+
+.w-md-editor-toolbar ul li button {
+  color: rgba(209, 213, 219, 0.8) !important;
+}
+
+.w-md-editor-toolbar ul li button:hover {
+  color: white !important;
+  background-color: rgba(55, 65, 81, 0.7) !important;
+}
+
+/* Error state styling */
+.md-editor-error .w-md-editor {
+  border: 1px solid #ff5068 !important;
+} 
