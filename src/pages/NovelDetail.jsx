@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../context/AuthContext'
-import api from '../services/api'
+import api, { chapterAPI, novelAPI } from '../services/api'
 import defaultCover from '../assets/default-cover.png'
 import CommentSection from '../components/CommentSection'
 import AddToLibrary from '../components/AddToLibrary'
 import AnimatedBook from '../components/AnimatedBook'
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
-import { FaStar, FaBookOpen, FaUserEdit, FaClock } from 'react-icons/fa'
+import { FaStar, FaBookOpen, FaUserEdit, FaClock, FaTrash, FaEllipsisV } from 'react-icons/fa'
 import './NovelDetail.css'
 import '../styles/3dBook.css'
 import '../styles/home.css'
@@ -36,12 +37,18 @@ const NovelDetail = () => {
   const { data: novel, isLoading: isNovelLoading } = useQuery({
     queryKey: ['novel', novelId],
     queryFn: async () => {
-      const response = await api.get(`/novels/${novelId}`)
-      return response.data
+      try {
+        console.log('Fetching novel details for ID:', novelId);
+        // Use the enhanced API method with better error handling
+        return await novelAPI.getNovelById(novelId);
+      } catch (error) {
+        console.error('Error fetching novel details:', error);
+        // Show a more user-friendly error
+        throw new Error('Failed to load novel details. Please try again later.');
+      }
     },
     onError: (error) => {
-      console.error('Error fetching novel:', error)
-      alert('Failed to fetch novel information.')
+      console.error('Error in novel query:', error);
     }
   })
   
@@ -50,15 +57,16 @@ const NovelDetail = () => {
     queryKey: ['chapters', novelId],
     queryFn: async () => {
       try {
-        const response = await api.get(`/chapters/${novelId}`)
-        return response.data
+        console.log('Fetching chapters for novel ID:', novelId);
+        // Use the new enhanced API method with better error handling
+        return await chapterAPI.getChaptersForNovel(novelId);
       } catch (error) {
-        console.error('Error fetching chapters:', error)
-        return []
+        console.error('Error in chapters query function:', error);
+        return [];
       }
     },
     onError: (error) => {
-      console.error('Error fetching chapters:', error)
+      console.error('Error in chapters query:', error);
     }
   })
 
@@ -67,8 +75,15 @@ const NovelDetail = () => {
     queryKey: ['author-profile', novel?.author?._id],
     queryFn: async () => {
       if (!novel?.author?._id) return null
-      const response = await api.get(`/user/profile/${novel.author._id}`)
-      return response.data
+      try {
+        const response = await api.get(`/user/profile/${novel.author._id}`, {
+          withCredentials: true
+        })
+        return response.data
+      } catch (error) {
+        console.error('Error fetching author profile:', error)
+        return null
+      }
     },
     enabled: !!novel?.author?._id && !!user && user._id !== novel?.author?._id
   })
@@ -81,7 +96,9 @@ const NovelDetail = () => {
   // Follow mutation
   const { mutate: followAuthor } = useMutation({
     mutationFn: async () => {
-      return api.post(`/user/follow/${novel.author._id}`)
+      return api.post(`/user/follow/${novel.author._id}`, {}, {
+        withCredentials: true
+      })
     },
     onSuccess: () => {
       // Invalidate queries to refresh data
@@ -97,7 +114,9 @@ const NovelDetail = () => {
   // Unfollow mutation
   const { mutate: unfollowAuthor } = useMutation({
     mutationFn: async () => {
-      return api.post(`/user/unfollow/${novel.author._id}`)
+      return api.post(`/user/unfollow/${novel.author._id}`, {}, {
+        withCredentials: true
+      })
     },
     onSuccess: () => {
       // Invalidate queries to refresh data
@@ -113,7 +132,9 @@ const NovelDetail = () => {
   // Delete novel mutation
   const { mutate: deleteNovel, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
-      return api.delete(`/novels/${novelId}`)
+      return api.delete(`/novels/${novelId}`, {
+        withCredentials: true
+      })
     },
     onSuccess: () => {
       navigate('/')
@@ -127,7 +148,9 @@ const NovelDetail = () => {
   // Delete chapter mutation
   const { mutate: deleteChapter, isPending: isDeletingChapter } = useMutation({
     mutationFn: async (chapterId) => {
-      return api.delete(`/chapters/chapter/${chapterId}`)
+      return api.delete(`/chapters/chapter/${chapterId}`, {
+        withCredentials: true
+      })
     },
     onSuccess: () => {
       setShowChapterDeleteConfirm(false)

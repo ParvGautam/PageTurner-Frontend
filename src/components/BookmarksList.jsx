@@ -331,8 +331,8 @@ const BookmarksList = () => {
                     <div className="w-12 h-0.5 bg-gradient-to-r from-[#5199fc] to-[#7b56ff] mt-3 mb-3 rounded-full"></div>
                     <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
                       {novelData.description || 'No description available'}
-                    </p>
-                  </div>
+                </p>
+              </div>
                 </div>
               );
             })}
@@ -427,8 +427,8 @@ const BookmarksList = () => {
                       <div className="absolute top-0 right-2 w-4 h-8 bg-gradient-to-b from-[#5199fc] to-[#7b56ff] shadow-lg z-20">
                         <div className="absolute bottom-0 left-0 border-2 border-transparent border-b-gray-900/40 border-l-gray-900/40"></div>
                         <div className="absolute bottom-0 right-0 border-2 border-transparent border-b-gray-900/40 border-r-gray-900/40"></div>
-                      </div>
-                    </div>
+              </div>
+            </div>
                     
                     {/* Content section with premium styling */}
                     <div className="ml-4 flex-1">
@@ -442,7 +442,7 @@ const BookmarksList = () => {
                         <div className="px-2 py-0.5 rounded-full bg-gray-800/60 backdrop-blur-sm text-xs text-white/70 border border-white/5 ml-2 flex-shrink-0">
                           {formatDate(bookmark.addedAt || bookmark.createdAt)}
                         </div>
-                      </div>
+                </div>
                       
                       {/* Elegant divider line */}
                       <div className="w-12 h-0.5 bg-gradient-to-r from-[#5199fc]/60 to-[#7b56ff]/60 my-1.5"></div>
@@ -454,8 +454,8 @@ const BookmarksList = () => {
                             Chapter {bookmark.chapter?.chapterNumber || '?'}: {bookmark.chapter?.title || 'Untitled'}
                           </p>
                           <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
-                            {bookmark.chapter?.description || "Continue reading from where you left off..."}
-                          </p>
+                  {bookmark.chapter?.description || "Continue reading from where you left off..."}
+                </p>
                         </>
                       ) : (
                         <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
@@ -472,8 +472,8 @@ const BookmarksList = () => {
                         </svg>
                       </div>
                     </div>
-                  </div>
-                </div>
+              </div>
+            </div>
               );
             })}
           </div>

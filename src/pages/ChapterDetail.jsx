@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useAuth } from '../context/AuthContext'
-import api from '../services/api'
+import api, { chapterAPI, novelAPI, bookmarksAPI } from '../services/api'
 import TextSelection from '../components/TextSelection'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -62,16 +62,22 @@ const ChapterDetail = () => {
     queryKey: ['chapter', chapterId],
     queryFn: async () => {
       try {
-        const response = await api.get(`/chapters/chapter/${chapterId}`)
-        return response.data
+        console.log('Fetching chapter details for ID:', chapterId);
+        // Use the improved chapterAPI method with CORS fixes
+        return await chapterAPI.getChapterForEditing(chapterId);
       } catch (error) {
-        console.error('Error fetching chapter:', error)
-        throw error
+        console.error('Error fetching chapter:', error);
+        throw error;
       }
     },
     onError: (error) => {
-      console.error('Error fetching chapter:', error)
-      alert('Failed to fetch chapter information.')
+      console.error('Error in chapter query:', error);
+      // More user-friendly error handling
+      if (error.message === 'Network Error') {
+        alert('Network connection error. Please check your internet connection.');
+      } else {
+        alert('Failed to load chapter. Please try again later.');
+      }
     }
   })
 
@@ -111,8 +117,14 @@ const ChapterDetail = () => {
   const { data: novel } = useQuery({
     queryKey: ['novel-for-chapter', chapter?.novel],
     queryFn: async () => {
-      const response = await api.get(`/novels/${chapter.novel}`)
-      return response.data
+      try {
+        console.log('Fetching novel for chapter navigation, ID:', chapter.novel);
+        // Use the improved novelAPI method
+        return await novelAPI.getNovelById(chapter.novel);
+      } catch (error) {
+        console.error('Error fetching novel for chapter:', error);
+        return null;
+      }
     },
     enabled: !!chapter?.novel
   })
@@ -121,8 +133,15 @@ const ChapterDetail = () => {
   const { data: chapters } = useQuery({
     queryKey: ['chapters-for-novel', chapter?.novel],
     queryFn: async () => {
-      const response = await api.get(`/chapters/${chapter.novel}`)
-      return response.data.sort((a, b) => a.chapterNumber - b.chapterNumber)
+      try {
+        console.log('Fetching chapters for navigation in ChapterDetail, novel ID:', chapter.novel);
+        // Use the enhanced API method with better error handling
+        const chaptersData = await chapterAPI.getChaptersForNovel(chapter.novel);
+        return chaptersData.sort((a, b) => a.chapterNumber - b.chapterNumber);
+      } catch (error) {
+        console.error('Error fetching chapters for navigation:', error);
+        return [];
+      }
     },
     enabled: !!chapter?.novel
   })
@@ -132,8 +151,12 @@ const ChapterDetail = () => {
     queryKey: ['bookmark-status', chapterId, chapter?.novel],
     queryFn: async () => {
       if (!user || !chapter?.novel) return { isBookmarked: false };
-      const response = await api.get(`/bookmarks/check/${chapter.novel}/${chapterId}`);
-      return response.data;
+      try {
+        return await bookmarksAPI.checkBookmark(chapter.novel, chapterId);
+      } catch (error) {
+        console.error('Error checking bookmark status:', error);
+        return { isBookmarked: false };
+      }
     },
     enabled: !!chapter?.novel && !!user,
     onSuccess: (data) => {
@@ -145,7 +168,7 @@ const ChapterDetail = () => {
   const { mutate: addBookmark } = useMutation({
     mutationFn: async () => {
       if (!chapter?.novel) return;
-      return api.post('/bookmarks/add', {
+      return await bookmarksAPI.addBookmark({
         novelId: chapter.novel,
         chapterId: chapterId
       });
@@ -164,7 +187,7 @@ const ChapterDetail = () => {
   const { mutate: removeBookmark } = useMutation({
     mutationFn: async () => {
       if (!chapter?.novel) return;
-      return api.post('/bookmarks/remove', {
+      return await bookmarksAPI.removeBookmark({
         novelId: chapter.novel,
         chapterId: chapterId
       });

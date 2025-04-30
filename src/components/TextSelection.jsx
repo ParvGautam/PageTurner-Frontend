@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useHighlights } from '../context/HighlightContext'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import api, { annotationsAPI } from '../services/api'
 
 const HIGHLIGHT_COLORS = [
   { name: 'yellow', bg: 'bg-yellow-200', hover: 'hover:bg-yellow-300', text: 'text-yellow-800' },
@@ -19,9 +22,26 @@ const TextSelection = ({ children, chapterId }) => {
   const popupRef = useRef(null)
   
   const { addHighlight, getChapterHighlights, removeHighlight } = useHighlights()
+  const queryClient = useQueryClient()
   
   // Get saved highlights for this chapter
   const chapterHighlights = chapterId ? getChapterHighlights(chapterId) : []
+  
+  // Add annotation mutation
+  const { mutate: addAnnotation } = useMutation({
+    mutationFn: async (data) => {
+      return annotationsAPI.addAnnotation(data);
+    },
+    onSuccess: () => {
+      setSelectedText('');
+      setShowPopup(false);
+      queryClient.invalidateQueries({ queryKey: ['annotations', chapterId] });
+    },
+    onError: (error) => {
+      console.error('Error adding annotation:', error);
+      alert('Failed to add annotation. Please try again.');
+    }
+  });
   
   const handleTextSelection = () => {
     const selection = window.getSelection()

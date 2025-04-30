@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import api from '../services/api'
+import api, { chapterAPI } from '../services/api'
 import MDEditor from '@uiw/react-md-editor'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -68,18 +68,24 @@ const AddChapter = () => {
   const { data: chapters, isLoading: areChaptersLoading } = useQuery({
     queryKey: ['chapters', novelId],
     queryFn: async () => {
-      const response = await api.get(`/chapters/${novelId}`)
-      return response.data
+      try {
+        console.log('Fetching chapters to determine next chapter number, novel ID:', novelId);
+        // Use the enhanced API method with better error handling
+        return await chapterAPI.getChaptersForNovel(novelId);
+      } catch (error) {
+        console.error('Error fetching chapters for numbering:', error);
+        return [];
+      }
     },
     onSuccess: (data) => {
       // If chapters exist, set the next chapter number
       if (data && data.length > 0) {
         const maxChapterNumber = Math.max(...data.map(c => c.chapterNumber))
-        setFormData(prev => ({ ...prev, chapterNumber: maxChapterNumber + 1, title: '', content: '' }))
+        setFormData(prev => ({ ...prev, chapterNumber: maxChapterNumber + 1 }))
       }
     },
     onError: (error) => {
-      console.error('Error fetching chapters:', error)
+      console.error('Error in chapters query:', error)
     }
   })
 

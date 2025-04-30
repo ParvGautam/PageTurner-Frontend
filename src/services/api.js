@@ -2,11 +2,12 @@ import axios from 'axios'
 
 // Create axios instance with base URL and credentials config
 const api = axios.create({
-  baseURL: 'https://pageturner-backend-2.onrender.com/api',
-  withCredentials: true,
+  baseURL: 'https://pageturner-backend-2.onrender.com/api', // Point to the deployed backend
+  withCredentials: true, // Set back to true as required by the backend
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000 // 10 second timeout for requests
 })
 
 // Add response interceptor for better error handling
@@ -18,10 +19,18 @@ api.interceptors.response.use(
       console.error('API Error Response:', {
         status: error.response.status,
         data: error.response.data,
-        headers: error.response.headers
+        headers: error.response.headers,
+        url: error.config?.url,
+        method: error.config?.method?.toUpperCase(),
+        withCredentials: error.config?.withCredentials
       })
     } else if (error.request) {
-      console.error('API Error Request:', error.request)
+      console.error('API Error Request:', {
+        url: error.config?.url,
+        method: error.config?.method?.toUpperCase(),
+        withCredentials: error.config?.withCredentials
+      })
+      console.error('No response received from API')
     } else {
       console.error('API Error Message:', error.message)
     }
@@ -36,7 +45,8 @@ api.interceptors.request.use(
     console.log('API Request:', {
       method: config.method.toUpperCase(),
       url: config.url,
-      withCredentials: config.withCredentials
+      withCredentials: config.withCredentials,
+      baseURL: config.baseURL
     })
     
     // Get token from cookies - make sure this works correctly
@@ -55,7 +65,7 @@ api.interceptors.request.use(
     if (config.method === 'get' && config.url.includes('/chapters/')) {
       config.headers = {
         ...config.headers,
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
         'Expires': '0'
       }
@@ -75,7 +85,9 @@ export const authAPI = {
   signup: async (userData) => {
     try {
       console.log('Sending signup data:', {...userData, password: '***'}) // Log without password
-      const response = await api.post('/auth/signup', userData)
+      const response = await api.post('/auth/signup', userData, {
+        withCredentials: true // Explicitly ensure credentials are sent
+      })
       console.log('Signup response:', response.data)
       return response.data
     } catch (error) {
@@ -87,7 +99,7 @@ export const authAPI = {
     try {
       console.log('Sending login credentials:', {...credentials, password: '***'}) // Log without password
       const response = await api.post('/auth/login', credentials, {
-        withCredentials: true // Explicitly set for login requests
+        withCredentials: true // Explicitly ensure credentials are sent
       })
       console.log('Login response:', response.data)
       // Check if the response data has the expected user fields
@@ -104,7 +116,7 @@ export const authAPI = {
   logout: async () => {
     try {
       const response = await api.post('/auth/logout', {}, {
-        withCredentials: true // Explicitly set for logout requests
+        withCredentials: true // Explicitly ensure credentials are sent
       })
       return response.data
     } catch (error) {
@@ -116,7 +128,7 @@ export const authAPI = {
     try {
       console.log('Sending profile data:', profileData)
       const response = await api.put('/auth/update-profile', profileData, {
-        withCredentials: true // Explicitly set for profile updates
+        withCredentials: true // Explicitly ensure credentials are sent
       })
       console.log('Profile update response:', response.data)
       return response.data
@@ -137,20 +149,101 @@ export const userAPI = {
 export const chapterAPI = {
   getChapterForEditing: async (chapterId) => {
     try {
-      // Use a direct request with cache-busting
-      const timestamp = new Date().getTime();
-      const response = await api.get(`/chapters/chapter/${chapterId}?_t=${timestamp}`, {
+      console.log('Fetching chapter for editing, ID:', chapterId);
+      
+      // Make a direct API call with minimal headers
+      const response = await axios({
+        method: 'GET',
+        url: `${api.defaults.baseURL}/chapters/chapter/${chapterId}`,
+        params: {
+          _t: new Date().getTime() // Single timestamp parameter
+        },
+        // Use only essential headers to avoid CORS preflight rejection
         headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        }
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
       });
+      
       console.log('Chapter data for editing:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Error fetching chapter for editing:', error.response?.data || error.message);
+      console.error('Error fetching chapter for editing:', error.message);
+      if (error.response) {
+        console.error('Server response:', {
+          status: error.response.status,
+          data: error.response.data
+        });
+      } else if (error.request) {
+        console.error('No response received');
+      }
       throw error;
+    }
+  },
+  
+  // Add method to fetch all chapters for a novel with enhanced error handling
+  getChaptersForNovel: async (novelId) => {
+    try {
+      if (!novelId) {
+        console.error('No novel ID provided to getChaptersForNovel');
+        return [];
+      }
+      
+      console.log('Fetching chapters for novel ID:', novelId);
+      
+      // Make a direct API call with minimal headers to avoid CORS preflight issues
+      const response = await axios({
+        method: 'GET',
+        url: `${api.defaults.baseURL}/chapters/${novelId}`,
+        params: {
+          _t: new Date().getTime() // Single timestamp parameter
+        },
+        // Use only essential headers to avoid CORS preflight rejection
+        headers: {
+          'Content-Type': 'application/json'
+          // Removed cache control headers that were causing CORS issues
+        },
+        withCredentials: true
+      });
+      
+      console.log('Chapters data received:', response.data);
+      
+      // Ensure we always return an array even if the backend returns null/undefined
+      if (!response.data) {
+        console.warn('Backend returned empty data for chapters, returning empty array');
+        return [];
+      }
+      
+      // If the backend returns an object with a chapters array inside
+      if (response.data.chapters && Array.isArray(response.data.chapters)) {
+        console.log('Found chapters array in response data');
+        return response.data.chapters;
+      }
+      
+      // Ensure result is an array
+      if (!Array.isArray(response.data)) {
+        console.warn('Response is not an array, converting to array');
+        return [response.data];
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching chapters for novel:', error.message);
+      if (error.response) {
+        console.error('Server response:', {
+          status: error.response.status,
+          data: error.response.data
+        });
+      } else if (error.request) {
+        console.error('No response received. Request details:', {
+          url: error.config?.url,
+          method: error.config?.method
+        });
+      }
+      
+      // Return empty array instead of throwing, to prevent UI breakage
+      console.log('Returning empty array due to error');
+      return [];
     }
   }
 }
@@ -158,7 +251,7 @@ export const chapterAPI = {
 export const libraryAPI = {
   addToLibrary: async (novelId) => {
     try {
-      const response = await api.post('/library/add', { novelId })
+      const response = await api.post('/library/add', { novelId }, { withCredentials: true })
       return response.data
     } catch (error) {
       console.error('Add to library error:', error.response?.data || error.message)
@@ -167,7 +260,7 @@ export const libraryAPI = {
   },
   removeFromLibrary: async (novelId) => {
     try {
-      const response = await api.post('/library/remove', { novelId })
+      const response = await api.post('/library/remove', { novelId }, { withCredentials: true })
       return response.data
     } catch (error) {
       console.error('Remove from library error:', error.response?.data || error.message)
@@ -176,7 +269,7 @@ export const libraryAPI = {
   },
   checkInLibrary: async (novelId) => {
     try {
-      const response = await api.get(`/library/check/${novelId}`)
+      const response = await api.get(`/library/check/${novelId}`, { withCredentials: true })
       return response.data
     } catch (error) {
       console.error('Check library error:', error.response?.data || error.message)
@@ -185,7 +278,7 @@ export const libraryAPI = {
   },
   getUserLibrary: async () => {
     try {
-      const response = await api.get('/library/user')
+      const response = await api.get('/library/user', { withCredentials: true })
       
       // Check the response structure before attempting to use array methods
       let formattedData = null;
@@ -248,11 +341,141 @@ export const libraryAPI = {
 export const novelAPI = {
   searchNovels: async (query) => {
     try {
-      const response = await api.get(`/novels/search?q=${encodeURIComponent(query)}`);
+      const response = await api.get(`/novels/search?q=${encodeURIComponent(query)}`, { withCredentials: true });
       return response.data;
     } catch (error) {
       console.error('Error searching novels:', error);
       throw error;
+    }
+  },
+  
+  // Add method to fetch a novel by ID
+  getNovelById: async (novelId) => {
+    try {
+      console.log('Fetching novel by ID:', novelId);
+      // Make a direct API call with minimal headers
+      const response = await axios({
+        method: 'GET',
+        url: `${api.defaults.baseURL}/novels/${novelId}`,
+        params: {
+          _t: new Date().getTime() // Single timestamp parameter
+        },
+        // Use only essential headers to avoid CORS preflight rejection
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      console.log('Novel data received:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching novel by ID:', error.message);
+      if (error.response) {
+        console.error('Server response:', {
+          status: error.response.status,
+          data: error.response.data
+        });
+      } else if (error.request) {
+        console.error('No response received');
+      }
+      throw error;
+    }
+  }
+}
+
+export const bookmarksAPI = {
+  addBookmark: async (data) => {
+    try {
+      // Direct axios call to avoid CORS issues
+      const response = await axios({
+        method: 'POST',
+        url: `${api.defaults.baseURL}/bookmarks/add`,
+        data: data,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding bookmark:', error);
+      throw error;
+    }
+  },
+  
+  removeBookmark: async (data) => {
+    try {
+      // Direct axios call to avoid CORS issues
+      const response = await axios({
+        method: 'POST',
+        url: `${api.defaults.baseURL}/bookmarks/remove`,
+        data: data,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error removing bookmark:', error);
+      throw error;
+    }
+  },
+  
+  checkBookmark: async (novelId, chapterId) => {
+    try {
+      // Direct axios call to avoid CORS issues
+      const response = await axios({
+        method: 'GET',
+        url: `${api.defaults.baseURL}/bookmarks/check/${novelId}/${chapterId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error checking bookmark:', error);
+      return { isBookmarked: false };
+    }
+  }
+}
+
+export const annotationsAPI = {
+  addAnnotation: async (data) => {
+    try {
+      // Direct axios call to avoid CORS issues
+      const response = await axios({
+        method: 'POST',
+        url: `${api.defaults.baseURL}/annotations/add`,
+        data: data,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding annotation:', error);
+      throw error;
+    }
+  },
+  
+  getAnnotations: async (chapterId) => {
+    try {
+      // Direct axios call to avoid CORS issues
+      const response = await axios({
+        method: 'GET',
+        url: `${api.defaults.baseURL}/annotations/${chapterId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error getting annotations:', error);
+      return [];
     }
   }
 }
