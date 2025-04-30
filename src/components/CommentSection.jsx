@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
-import defaultAvatar from '../assets/default-avatar.png'
+import defaultAvatar from '../assets/default-avatar.jpg'
 import StarRating from './StarRating'
 import './CommentSection.css'
 

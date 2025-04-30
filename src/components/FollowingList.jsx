@@ -3,27 +3,45 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
-import defaultAvatar from '../assets/default-avatar.png'
+import defaultAvatar from '../assets/default-avatar.jpg'
+import { getValidImageUrl, createImageErrorHandler } from '../utils/imageUtils'
 
 const FollowingList = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
 
   // Query to fetch user's following list
-  const { data: following, isLoading, isError } = useQuery({
+  const { data: following, isLoading, isError, error } = useQuery({
     queryKey: ['userFollowing', user?._id],
     queryFn: async () => {
-      if (!user?._id) return []
-      
-      try {
-        const response = await api.get(`/user/profile/${user._id}`)
-        return response.data.following || []
-      } catch (error) {
-        console.error('Error fetching following users:', error)
+      if (!user?._id) {
+        console.log('Cannot fetch following: No user ID available')
         return []
       }
+      
+      console.log('Fetching following list for user ID:', user._id)
+      try {
+        const response = await api.get(`/user/profile/${user._id}`)
+        console.log('Following list API response:', response.data)
+        
+        // Check if the response has the following property and it's an array
+        if (!response.data || !Array.isArray(response.data.following)) {
+          console.error('Following list response has unexpected format:', response.data)
+          // Return empty array if following property is missing or not an array
+          return []
+        }
+        
+        // Filter out the current user from the following list
+        const followingList = response.data.following || []
+        return followingList.filter(followedUser => followedUser._id !== user._id)
+      } catch (error) {
+        console.error('Error fetching following list:', error.response?.data || error.message)
+        throw error
+      }
     },
-    enabled: !!user?._id
+    enabled: !!user?._id,
+    retry: 2,
+    staleTime: 1000 * 60 * 5 // 5 minutes
   })
 
   if (isLoading) {
@@ -38,19 +56,19 @@ const FollowingList = () => {
     return (
       <div className="text-center text-[#ff5068] py-10">
         <h3 className="text-lg font-medium">Error loading your following list</h3>
-        <p className="mt-1">Please try again later</p>
+        <p className="mt-1">{error?.message || 'Please try again later'}</p>
       </div>
     )
   }
 
-  if (!following?.length) {
+  if (!following || following.length === 0) {
     return (
-      <div className="text-center py-10 bg-gray-900">
-        <h3 className="text-lg font-medium text-white">You're not following anyone yet</h3>
-        <p className="mt-1 text-[#ff9868]">Follow authors to see their content in your feed</p>
-        <button
-          onClick={() => navigate('/')}
-          className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#5199fc] hover:bg-[#4180d6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5199fc]"
+      <div className="text-center text-gray-400 py-10">
+        <h3 className="text-lg font-medium">You aren't following anyone yet</h3>
+        <p className="mt-1">Find authors you like and follow them to see their updates</p>
+        <button 
+          onClick={() => navigate('/')} 
+          className="mt-4 px-4 py-2 bg-[#5199fc] text-white rounded-md hover:bg-[#4180d6]"
         >
           Discover Authors
         </button>
@@ -59,26 +77,24 @@ const FollowingList = () => {
   }
 
   return (
-    <div className="py-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {following.map(followedUser => (
-          <div 
-            key={followedUser._id}
-            className="bg-gray-800 border border-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:shadow-md transition-shadow cursor-pointer hover:bg-gray-700"
-            onClick={() => navigate(`/author/${followedUser._id}`)}
-          >
-            <img 
-              src={followedUser.profileImg || defaultAvatar} 
-              alt={followedUser.username} 
-              className="h-16 w-16 rounded-full object-cover border border-[#5199fc]"
-            />
-            <div>
-              <h3 className="font-medium text-white">{followedUser.fullName || followedUser.username}</h3>
-              <p className="text-sm text-[#5199fc]">@{followedUser.username}</p>
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {following.map((followedUser) => (
+        <div 
+          key={followedUser._id} 
+          className="flex items-center p-4 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors"
+          onClick={() => navigate(`/author/${followedUser._id}`)}
+        >
+          <img
+            src={getValidImageUrl(followedUser.profileImg, defaultAvatar)}
+            alt={followedUser.username}
+            className="h-12 w-12 rounded-full object-cover mr-4"
+            onError={createImageErrorHandler(defaultAvatar, 'Following profile')}
+          />
+          <div>
+            <h4 className="font-medium text-white">{followedUser.username}</h4>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   )
 }

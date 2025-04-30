@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { libraryAPI } from '../services/api';
@@ -12,6 +12,8 @@ const Library = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [bookToRemove, setBookToRemove] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['userLibrary', user?._id],
@@ -38,11 +40,45 @@ const Library = () => {
     navigate(`/novels/${novelId}`);
   };
 
-  const handleRemoveBook = (e, novelId) => {
+  const handleRemoveBook = (e, bookId) => {
     e.stopPropagation();
-    if (confirm('Are you sure you want to remove this book from your library?')) {
-      removeBook(novelId);
+    
+    // Find the book object first to get its novel ID
+    const book = data?.library?.find(item => item._id === bookId);
+    if (!book) {
+      console.error('Book not found in library:', bookId);
+      return;
     }
+
+    // Check if we have a valid novel ID
+    if (!book.novel || !book.novel._id) {
+      console.error('No valid novel ID found for book:', book);
+      return;
+    }
+
+    // Log what we're removing
+    console.log('Preparing to remove book:', {
+      bookId: bookId,
+      novelId: book.novel._id,
+      title: book.novel.title
+    });
+
+    // Show premium confirmation modal instead of basic alert
+    setBookToRemove(book);
+    setShowConfirmModal(true);
+  };
+  
+  const confirmRemoval = () => {
+    if (bookToRemove?.novel?._id) {
+      removeBook(bookToRemove.novel._id);
+    }
+    setShowConfirmModal(false);
+    setBookToRemove(null);
+  };
+  
+  const cancelRemoval = () => {
+    setShowConfirmModal(false);
+    setBookToRemove(null);
   };
 
   // Format date properly
@@ -147,6 +183,63 @@ const Library = () => {
             >
               Explore Books
             </button>
+          </div>
+        )}
+        
+        {/* Premium Removal Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            {/* Backdrop with blur effect */}
+            <div 
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+              onClick={cancelRemoval}
+            ></div>
+            
+            {/* Modal Content */}
+            <div className="relative z-10 bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-md border border-gray-700/50 p-6 rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+              {/* Decorative elements */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-[#5199fc]/10 blur-2xl"></div>
+              <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-[#7b56ff]/10 blur-2xl"></div>
+              
+              <div className="relative z-10">
+                {/* Book thumbnail */}
+                <div className="flex justify-center mb-4">
+                  <div className="w-20 h-28 relative shadow-lg rounded overflow-hidden border border-gray-700/70">
+                    <img 
+                      src={bookToRemove?.novel?.thumbnail || defaultCover} 
+                      alt={bookToRemove?.novel?.title || "Book cover"} 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  </div>
+                </div>
+                
+                <h3 className="text-xl font-semibold text-center mb-1 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/80">
+                  Remove from Library
+                </h3>
+                
+                <div className="w-16 h-0.5 bg-gradient-to-r from-[#5199fc]/60 to-[#7b56ff]/60 mx-auto my-3 rounded-full"></div>
+                
+                <p className="text-center text-gray-300 mb-6">
+                  Are you sure you want to remove <span className="text-white font-medium">{bookToRemove?.novel?.title}</span> from your library?
+                </p>
+                
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={cancelRemoval}
+                    className="px-4 py-2 bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 rounded-lg text-white/90 transition-all duration-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmRemoval}
+                    className="px-4 py-2 bg-gradient-to-r from-[#5199fc]/90 to-[#7b56ff]/90 hover:from-[#5199fc] hover:to-[#7b56ff] rounded-lg text-white font-medium transition-all duration-300 shadow-lg hover:shadow-[#5199fc]/20"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

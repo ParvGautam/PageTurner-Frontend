@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useLogout } from '../hooks/useAuthHooks'
 import { useTheme } from '../context/ThemeContext'
-import defaultAvatar from '../assets/default-avatar.png'
+import defaultAvatar from '../assets/default-avatar.jpg'
 import Logo from './Logo'
 
 const Navbar = () => {
