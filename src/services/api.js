@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base URL and credentials config
 const api = axios.create({
-  baseURL: '/api', // Point to the deployed backend
+  baseURL: 'https://pageturner-backend-2.onrender.com/api', // Point to the deployed backend
   withCredentials: true, // Set back to true as required by the backend
   headers: {
     'Content-Type': 'application/json'
@@ -120,17 +120,57 @@ export const authAPI = {
         password: 'guestPassword123!'
       }
       console.log('Using guest login credentials')
-      const response = await api.post('/auth/login', guestCredentials, {
-        withCredentials: true
-      })
-      console.log('Guest login response:', response.data)
-      if (!response.data._id) {
-        console.error('Guest login response is missing user ID:', response.data)
-        throw new Error('Invalid login response from server')
+      
+      // First, try to login
+      try {
+        const response = await api.post('/auth/login', guestCredentials, {
+          withCredentials: true
+        })
+        console.log('Guest login response:', response.data)
+        if (!response.data._id) {
+          console.error('Guest login response is missing user ID:', response.data)
+          throw new Error('Invalid login response from server')
+        }
+        return response.data
+      } catch (loginError) {
+        // If login fails, try to setup the guest user first
+        if (loginError.response?.status === 400) {
+          console.log('Guest user does not exist, attempting to create it...')
+          try {
+            await api.post('/auth/setup-guest', {})
+            console.log('Guest user setup successful, retrying login...')
+            
+            // Retry login after successful setup
+            const retryResponse = await api.post('/auth/login', guestCredentials, {
+              withCredentials: true
+            })
+            console.log('Guest login retry response:', retryResponse.data)
+            if (!retryResponse.data._id) {
+              console.error('Guest login retry response is missing user ID:', retryResponse.data)
+              throw new Error('Invalid login response from server')
+            }
+            return retryResponse.data
+          } catch (setupError) {
+            console.error('Failed to setup guest user:', setupError.response?.data || setupError.message)
+            throw new Error('Failed to setup guest user for production environment')
+          }
+        } else {
+          throw loginError
+        }
       }
-      return response.data
     } catch (error) {
       console.error('Guest login error:', error.response?.data || error.message)
+      throw error
+    }
+  },
+  setupGuestUser: async () => {
+    try {
+      console.log('Setting up guest user in production database')
+      const response = await api.post('/auth/setup-guest', {})
+      console.log('Setup guest user response:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('Setup guest user error:', error.response?.data || error.message)
       throw error
     }
   },
