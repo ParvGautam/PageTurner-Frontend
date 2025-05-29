@@ -16,6 +16,19 @@ export const useLogin = () => {
   })
 }
 
+export const useGuestLogin = () => {
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: authAPI.guestLogin,
+    onSuccess: (data) => {
+      login(data)
+      navigate('/')
+    }
+  })
+}
+
 export const useSignup = () => {
   const { login } = useAuth()
   const navigate = useNavigate()

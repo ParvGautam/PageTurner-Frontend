@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base URL and credentials config
 const api = axios.create({
-  baseURL: 'https://pageturner-backend-2.onrender.com/api', // Point to the deployed backend
+  baseURL: '/api', // Point to the deployed backend
   withCredentials: true, // Set back to true as required by the backend
   headers: {
     'Content-Type': 'application/json'
@@ -110,6 +110,27 @@ export const authAPI = {
       return response.data
     } catch (error) {
       console.error('Login error:', error.response?.data || error.message)
+      throw error
+    }
+  },
+  guestLogin: async () => {
+    try {
+      const guestCredentials = {
+        email: 'guest@interview.com',
+        password: 'guestPassword123!'
+      }
+      console.log('Using guest login credentials')
+      const response = await api.post('/auth/login', guestCredentials, {
+        withCredentials: true
+      })
+      console.log('Guest login response:', response.data)
+      if (!response.data._id) {
+        console.error('Guest login response is missing user ID:', response.data)
+        throw new Error('Invalid login response from server')
+      }
+      return response.data
+    } catch (error) {
+      console.error('Guest login error:', error.response?.data || error.message)
       throw error
     }
   },

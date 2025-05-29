@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useLogin } from '../hooks/useAuthHooks'
+import { useLogin, useGuestLogin } from '../hooks/useAuthHooks'
 import FloatingBooks from '../components/FloatingBooks'
 import { motion } from 'framer-motion'
 
@@ -12,6 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   
   const { mutate: login, isPending, error } = useLogin()
+  const { mutate: loginAsGuest, isPending: isGuestLoginPending } = useGuestLogin()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,6 +22,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     login(formData)
+  }
+
+  const handleGuestLogin = () => {
+    loginAsGuest()
   }
 
   const togglePasswordVisibility = () => {
@@ -112,6 +117,23 @@ const Login = () => {
             className="w-full bg-gradient-to-r from-[#5199fc] to-[#ff5068] text-white py-3 rounded-lg font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5199fc] transition-all duration-200 disabled:opacity-70"
           >
             {isPending ? 'Logging in...' : 'Log In'}
+          </motion.button>
+          
+          <div className="relative flex items-center py-2">
+            <div className="flex-grow border-t border-gray-700"></div>
+            <span className="flex-shrink mx-3 text-gray-500 text-sm">or</span>
+            <div className="flex-grow border-t border-gray-700"></div>
+          </div>
+          
+          <motion.button
+            type="button"
+            onClick={handleGuestLogin}
+            disabled={isGuestLoginPending}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 disabled:opacity-70"
+          >
+            {isGuestLoginPending ? 'Logging in as guest...' : 'Login as Guest (For Interviewers)'}
           </motion.button>
         </form>
         
